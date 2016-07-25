@@ -1,13 +1,16 @@
-var app = angular.module('facturacionApp',['ngRoute','facturacionApp.configuracion']);
+var app = angular.module('facturacionApp',['ngRoute','facturacionApp.configuracion','facturacionApp.mensajes','facturacionApp.notificaciones']);
 
-app.controller('mainCtrl',['$scope','Configuracion', function($scope, Configuracion){
+app.controller('mainCtrl',['$scope','Configuracion','Mensajes', 'Notificaciones', function($scope, Configuracion, Mensajes, Notificaciones){
   $scope.config = {};
+  $scope.mensajes = Mensajes.mensajes;
+  $scope.notificaciones = Notificaciones.notificaciones;
+  console.log($scope.notificaciones);
+
   $scope.usuario = {
     "nombre": "Pablo"
   };
   Configuracion.cargar().then(function(){
     $scope.config = Configuracion.config;
-    console.log($scope.config);
   })
 }]);
 
@@ -34,4 +37,13 @@ app.filter('quitarLetra', function(){
       return palabra;
     }
   }
-});
+}).
+filter('mensajeCorto', function(){
+  return function(mensaje){
+    if(mensaje != undefined && mensaje.length > 35){
+      return mensaje.substring(0,35)+"...";
+    } else {
+      return mensaje;
+    }
+  }
+})
